@@ -18,13 +18,15 @@ const createPlayersStr = `CREATE TABLE IF NOT EXISTS players (
         wins INT,
         losses INT,
         gamesPlayed INT,
-        pointsPerGame REAL
+        pointsPerGame REAL,
+        createdAt TEXT default (datetime(current_timestamp))
     )`;
 
 const createMatchesStr = `CREATE TABLE IF NOT EXISTS matches (
         id integer PRIMARY KEY,
         matchTime TEXT,
-        location TEXT
+        location TEXT,
+        createdAt TEXT default (datetime(current_timestamp))
     )`;
 
 const createPlayerMatchesStr = `CREATE TABLE IF NOT EXISTS player_matches (
@@ -36,6 +38,7 @@ const createPlayerMatchesStr = `CREATE TABLE IF NOT EXISTS player_matches (
         FOREIGN KEY(match_id) REFERENCES matches(id) ON DELETE CASCADE
     )`;
 
+
 const createStrings = [createPlayersStr, createMatchesStr, createPlayerMatchesStr];
 
 const closeDb = (code) => { 
@@ -45,6 +48,14 @@ const closeDb = (code) => {
 
 // add stdin resume so that we can catch the signals on Ctrl (Cmd) + c and other kill commands.
 process.stdin.resume();
+process.on('uncaughtException', (err, origin) => {
+  console.error(`the following error occurred in the process: 
+    ${err} 
+from origin: 
+    ${origin}
+    `);
+  process.exit(1);
+});
 process.on('exit', closeDb);
 process.on('SIGINT', closeDb);
 process.on('SIGTERM', closeDb);
@@ -67,22 +78,8 @@ module.exports = {
                     reject(err);
                 }
 
-                resolve();
+                resolve(db);
             });               
         });
     },
-
-    run: (sql, params = []) => {
-        return new Promise((resolve, reject) => {
-            db.run(sql, params, (err) => {
-                if (err) {
-                    console.error('Error running the following sql: ', sql);
-                    console.error(err);
-                    reject(err);
-                } else {
-                    resolve("OK");
-                }
-            });
-        });
-    }
 }; 
