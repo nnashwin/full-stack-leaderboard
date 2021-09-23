@@ -12,7 +12,9 @@ db
     .connect()
     .then(db => { 
         console.log('tables created successfully') 
-        app.use("/graphql", graphqlHTTP({ schema: schema, graphiql: true, context: {db: db}}));
+        app.use(
+            "/graphql", 
+            graphqlHTTP({ schema: schema, graphiql: true, context: {db: db}}));
         app.listen(PORT, () => {
             console.log(`Server listening on port: ${PORT}`);
         });
