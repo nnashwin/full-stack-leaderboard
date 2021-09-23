@@ -3,6 +3,7 @@ const graphql = require('graphql');
 const PlayerType = new graphql.GraphQLObjectType({
     name: "Player",
     fields: {
+        id: { type: graphql.GraphQLID },
         name: { type: graphql.GraphQLString },
         wins: { type: graphql.GraphQLInt },
         losses: { type: graphql.GraphQLInt },
@@ -40,6 +41,38 @@ const RootQuery = new graphql.GraphQLObjectType({
     }
 });
 
+const Mutation = new graphql.GraphQLObjectType({
+    name: 'Mutations',
+    fields: {
+        addPlayer: {
+            type: PlayerType,
+            args: {
+                name: {type: new graphql.GraphQLNonNull(graphql.GraphQLString)},
+            },
+            resolve(parent, {name}, context) {
+                const db = context.db;
+                return new Promise((resolve, reject) => {
+                    db.run('INSERT INTO players(name) VALUES(?)', [name], (err) => {
+                        if (err) {
+                            console.error("addPlayer failed with the following message: ", err);
+                            reject(err);
+                        } 
+
+                        db.get("SELECT * FROM players ORDER BY id DESC LIMIT 1;", (err, rows) => {
+                            if (err) {
+                                reject(err);
+                            }
+                            console.log(rows);
+                            resolve(rows);
+                        });
+                    });
+                });
+            }
+        }
+    }
+});
+
 module.exports = new graphql.GraphQLSchema({
-    query: RootQuery
+    query: RootQuery,
+    mutation: Mutation
 });

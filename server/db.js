@@ -15,10 +15,10 @@ const db = new sqlite3.Database("leaderboard.db3", (err) => {
 const createPlayersStr = `CREATE TABLE IF NOT EXISTS players (
         id integer PRIMARY KEY,
         name TEXT,
-        wins INT,
-        losses INT,
-        gamesPlayed INT,
-        pointsPerGame REAL,
+        wins INT default 0,
+        losses INT default 0,
+        gamesPlayed INT default 0,
+        pointsPerGame REAL default 0,
         createdAt TEXT default (datetime(current_timestamp))
     )`;
 
