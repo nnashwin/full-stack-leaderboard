@@ -1,0 +1,263 @@
+{
+	"info": {
+		"_postman_id": "cdd1c843-c6f7-453e-a7ee-9d5ab4448a50",
+		"name": "Leaderboard Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Status",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "{\r\n    status\r\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Players",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Responds with 200 (success) and has correct body', () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    var jsonData = responseBody && JSON.parse(responseBody);\r",
+							"\r",
+							"    pm.expect(jsonData.data).to.be.an('object');\r",
+							"    pm.expect(jsonData.data.players).to.not.eql(0);\r",
+							"    pm.expect(jsonData.errors).to.eql(undefined);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "{\r\n    players {\r\n        name\r\n        wins\r\n        losses\r\n        gamesPlayed\r\n        rating\r\n    }\r\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Matches",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Responds with 200 (success) and has correct body', () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    var jsonData = responseBody && JSON.parse(responseBody);\r",
+							"\r",
+							"    pm.expect(jsonData.data).to.be.an('object');\r",
+							"    pm.expect(jsonData.data.matches).to.not.eql(0);\r",
+							"    pm.expect(jsonData.errors).to.eql(undefined);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "{\r\n    matches {\r\n        location\r\n        opponent_id\r\n        player_id\r\n        finalPlayerScore\r\n        finalOpponentScore\r\n    }\r\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Players Fail on extra field",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Responds with 200 (success) and has correct body', () => {\r",
+							"    pm.response.to.have.status(400);\r",
+							"    var jsonData = responseBody && JSON.parse(responseBody);\r",
+							"\r",
+							"    pm.expect(jsonData.data).to.not.be.an('object');\r",
+							"    pm.expect(jsonData.errors).to.not.eql(undefined);\r",
+							"    pm.expect(jsonData.errors.length).to.not.eql(0);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "{\r\n    players {\r\n        name\r\n        wins\r\n        losses\r\n        gamesPlayed\r\n        rating\r\n        cookies\r\n    }\r\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Players Fail on extra invalid input Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Responds with 200 (success) and has correct body', () => {\r",
+							"    pm.response.to.have.status(400);\r",
+							"    var jsonData = responseBody && JSON.parse(responseBody);\r",
+							"\r",
+							"    pm.expect(jsonData.data).to.not.be.an('object');\r",
+							"    pm.expect(jsonData.errors).to.not.eql(undefined);\r",
+							"    pm.expect(jsonData.errors.length).to.not.eql(0);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation {\r\n    addPlayer(name: \"barkley\", last: \"charles\") {\r\n        name\r\n        wins\r\n        losses\r\n        gamesPlayed\r\n        rating\r\n    }\r\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Players pass on extra invalid input",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Responds with 200 (success) and has correct body', () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    var jsonData = responseBody && JSON.parse(responseBody);\r",
+							"\r",
+							"    pm.expect(jsonData.data).to.be.an('object');\r",
+							"    pm.expect(jsonData.data.players).to.not.eql(0);\r",
+							"    pm.expect(jsonData.errors).to.eql(undefined);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation {\r\n  addPlayer(name: \"craig\") {\r\n    name\r\n    id\r\n  }\r\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
