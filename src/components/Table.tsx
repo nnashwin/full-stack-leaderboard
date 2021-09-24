@@ -1,58 +1,88 @@
 import React, { useMemo } from 'react';
-import { Column, useTable } from 'react-table';
+import { Column, useTable, useSortBy } from 'react-table';
 
 interface ExampleObject {
-    col1: string
-    col2: string
+    name: string
+    wins: number
+    losses: number
+    rating: number
+    gamesPlayed: number
 }
 
-function Table() {
-   const data = React.useMemo(
-     () => [
-       {
-         col1: 'Hello',
-         col2: 'World',
-       },
-       {
-         col1: 'react-table',
-         col2: 'rocks',
-       },
-       {
-         col1: 'whatever',
-         col2: 'you want',
-       },
-     ],
-     []
-   )
- 
-   const columns: Column<ExampleObject>[] = [
+interface SortType {
+    sortType: string
+}
+
+const columns: Column<ExampleObject>[] = [
         {
-            Header: 'Column 1',
-            accessor: 'col1', // accessor is the "key" in the data
+            Header: 'Player Name',
+            accessor: 'name', 
+            sortType: 'basic'
         },
         {
-            Header: 'Column 2',
-            accessor: 'col2',
+            Header: 'Wins',
+            accessor: 'wins',
+            sortType: 'basic'
+        },
+
+        {
+            Header: 'Losses',
+            accessor: 'losses',
+            sortType: 'basic'
+        },
+        {
+            Header: 'Total Matches Played',
+            accessor: 'gamesPlayed',
+            sortType: 'basic'
+        },
+        {
+            Header: 'Rating',
+            accessor: 'rating',
+            sortType: 'basic'
         },
     ]
-     
- 
+
+const data = [
+       {
+         name: 'Liu Guoliang',
+         wins: 100,
+         losses: 5,
+         rating: 2300,
+         gamesPlayed: 105
+       },
+       {
+         name: 'Chen Meng',
+         wins: 110,
+         losses: 0,
+         rating: 3900,
+         gamesPlayed: 110
+       },
+       {
+         name: 'Mima Ito',
+         wins: 55,
+         losses: 80,
+         rating: 1600,
+         gamesPlayed: 135
+       },
+     ];
+
+function Table() {
    const {
      getTableProps,
      getTableBodyProps,
      headerGroups,
      rows,
-     prepareRow,
-   } = useTable<ExampleObject>({ columns, data })
+     prepareRow
+   } = useTable<ExampleObject>({ columns, data }, useSortBy)
  
    return (
      <table {...getTableProps()} role="leaderboard-table" style={{ border: 'solid 1px blue' }} data-testid="leaderboard">
        <thead>
          {headerGroups.map(headerGroup => (
-           <tr {...headerGroup.getHeaderGroupProps()}>
+           <tr {...headerGroup.getHeaderGroupProps()} data-testid='header-row'>
              {headerGroup.headers.map(column => (
                <th
-                 {...column.getHeaderProps()}
+                 {...column.getHeaderProps(column.getSortByToggleProps())}
                  style={{
                    borderBottom: 'solid 3px red',
                    background: 'aliceblue',
@@ -61,6 +91,9 @@ function Table() {
                  }}
                >
                  {column.render('Header')}
+                 <span>
+                     {column.isSorted ? (column.isSortedDesc ? '↑' : '↓') : ''}
+                 </span>
                </th>
              ))}
            </tr>
