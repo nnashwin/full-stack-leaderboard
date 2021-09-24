@@ -1,4 +1,5 @@
 const graphql = require('graphql');
+const { updatePlayerStats } = require('./utils');
 
 const PlayerType = new graphql.GraphQLObjectType({
     name: "Player",
@@ -8,7 +9,8 @@ const PlayerType = new graphql.GraphQLObjectType({
         wins: { type: graphql.GraphQLInt },
         losses: { type: graphql.GraphQLInt },
         gamesPlayed: { type: graphql.GraphQLInt },
-        pointsPerGame: { type: graphql.GraphQLFloat },
+        opponentsRatings: { type: graphql.GraphQLInt },
+        rating: { type: graphql.GraphQLInt },
         createdAt: { type: graphql.GraphQLString },
     }
 });
@@ -47,8 +49,27 @@ const RootQuery = new graphql.GraphQLObjectType({
                         } else {
                             resolve(rows);
                         }
-                    })
-                })
+                    });
+                });
+            }
+        },
+        player: {
+            type: PlayerType,
+            args: {
+                id: {
+                    type: new graphql.GraphQLNonNull(graphql.GraphQLID)
+                }
+            },
+            resolve: (_root, {id}, context) => {
+                const { db } = context;
+                return new Promise((resolve, reject) => {
+                    db.all("SELECT * FROM players WHERE id = (?);", [id], (err, rows) => {
+                        if (err) {
+                            reject(null);
+                        }
+                        resolve(rows[0]);
+                    });
+                });
             }
         },
         players: {
@@ -112,14 +133,34 @@ const Mutation = new graphql.GraphQLObjectType({
                     if (player_id == opponent_id) {
                         reject(new Error('player_id should be different than opponent id.  Create correct ids and try again.'));
                     }
+                    // TODO: Wrap this in a database transaction where it is all or nothing.
+                    // Right now it is running synchronously, but mistakes in one db operation could put the tables in a bad state.
                     db.all('SELECT * FROM players WHERE id IN (?, ?)', [player_id, opponent_id], (err, rows) => {
                         if (!err && rows.length == 2) {
                             db.serialize(() => {
                                 const winnerId = finalPlayerScore > finalOpponentScore ? player_id : opponent_id;
+                                const loserId = finalPlayerScore < finalOpponentScore ? player_id : opponent_id;
+                                
                                 db.run('INSERT INTO matches(player_id, opponent_id, finalPlayerScore, finalOpponentScore, winner_id, matchTime, location) VALUES(?, ?, ?, ?, ?, ?, ?)', [args.player_id, args.opponent_id, args.finalPlayerScore, args.finalOpponentScore, winnerId, args.matchTime, args.location], (err) => {
                                     if (err) {
                                         return reject(err);
                                     } 
+                                });
+
+                                const winner = rows[0].id == winnerId ? rows[0] : rows[1];
+                                const loser = rows[0].id == loserId ? rows[0] : rows[1];
+
+                                const winPrevRating = winner.rating;
+                                const losePrevRating = loser.rating;
+                                const updatedWinner = updatePlayerStats(winner, losePrevRating, true);
+                                const updatedLoser = updatePlayerStats(loser, winPrevRating, false);
+
+                                db.run('UPDATE players SET wins = ?, gamesPlayed = ?, rating = ?, opponentsRatings = ? WHERE id = ?', [updatedWinner.wins, updatedWinner.gamesPlayed, updatedWinner.rating, updatedWinner.opponentsRatings, winnerId], (err) => {
+                                    if (err) return reject(err);
+                                });
+
+                                db.run('UPDATE players SET losses = ?, gamesPlayed = ?, rating = ?, opponentsRatings = ? WHERE id = ?', [updatedLoser.losses, updatedLoser.gamesPlayed, updatedLoser.rating, updatedLoser.opponentsRatings, loserId], (err) => {
+                                    if (err) return reject(err);
                                 });
 
                                 db.get("SELECT * FROM matches ORDER BY id DESC LIMIT 1;", (err, rows) => {

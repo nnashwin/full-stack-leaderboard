@@ -15,10 +15,11 @@ const db = new sqlite3.Database("leaderboard.db3", (err) => {
 const createPlayersStr = `CREATE TABLE IF NOT EXISTS players (
         id integer PRIMARY KEY,
         name TEXT,
-        wins default 0,
-        losses default 0,
-        gamesPlayed default 0,
-        pointsPerGame REAL default 0,
+        wins INT default 0,
+        losses INT default 0,
+        gamesPlayed INT default 0,
+        rating INT default 1200,
+        opponentsRatings INT default 0,
         createdAt TEXT default (datetime(current_timestamp))
     )`;
 
@@ -49,14 +50,14 @@ module.exports = {
                     db.run(createString, (err) => {
                         if (err) {
                             console.error('Error creating table in the database: ', err)
-                            reject(err);
+                            return reject(err);
                         } 
                     });
                 }
 
                 if (serialErr) {
                     console.error('Error in serializing table creation: ', err);
-                    reject(err);
+                    return reject(err);
                 }
 
                 resolve(db);
