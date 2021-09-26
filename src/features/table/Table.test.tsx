@@ -74,7 +74,7 @@ it('renders into the dom', () => {
         render(<Table columns={playerColumns} data={playerData} />, container);       
     });
 
-    expect(document.querySelector('[data-testid="leaderboard"]').getAttribute('role')).toEqual('leaderboard-table');
+    expect(document.querySelector('[data-testid="leaderboard"]').getAttribute('role')).toEqual('table');
 });
 
 it('changes sorted order based on the header that is clicked', () => {

@@ -1,67 +1,37 @@
 import React, { useEffect } from 'react';
-import { Box, Block, Container, Notification } from 'react-bulma-components';
+import { Box, Block, Container } from 'react-bulma-components';
 import { useAppDispatch, useAppSelector  } from '../../../app/hooks';
-import { clearState, fetchPlayers, tableSelector } from '../../../features/table/tableSlice';
+import Constants from '../../../common/constants';
+import { clearState, fetchMatches, fetchPlayers, tableSelector } from '../../../features/table/tableSlice';
 import '../../../css/bulma.min.css';
 
 import {LeaderboardPageProps} from '../../../common/types';
 import Table from '../../../features/table/Table';
 
-interface PlayerData {
-    name: string;
-    wins: number;
-    losses: number;
-    rating: number;
-    gamesPlayed: number;
-}
 
-const columns = [
-    {
-        Header: 'Player Name',
-        accessor: 'name', 
-        sortType: 'basic'
-    },
-    {
-        Header: 'Wins',
-        accessor: 'wins',
-        sortType: 'basic'
-    },
-
-    {
-        Header: 'Losses',
-        accessor: 'losses',
-        sortType: 'basic'
-    },
-    {
-        Header: 'Total Matches Played',
-        accessor: 'gamesPlayed',
-        sortType: 'basic'
-    },
-    {
-        Header: 'Rating',
-        accessor: 'rating',
-        sortType: 'basic'
-    },
-];
 
 function LeaderboardPage(props: LeaderboardPageProps) {
     const dispatch = useAppDispatch();
 
     // @ts-ignore
     // TODO: update the redux typescript related code to make the types match.
-    const { data, isFetching, isSuccess, isError, errorMessage } = useAppSelector(tableSelector);
+    const { data, columns, currentTable, isFetching } = useAppSelector(tableSelector);
+
+    const { entity } = props;
 
     useEffect(() => {
-        return () => {
+        if (currentTable !== entity) {
             dispatch(clearState());
+            switch(entity) {
+                case Constants.PLAYER_ENTITY:
+                    dispatch(fetchPlayers());
+                    break;
+                case Constants.MATCHES_ENTITY:
+                    dispatch(fetchMatches());
+                    break;
+            }
         }
-    }, []);
-
-    useEffect(() => {
-        return () => {
-            dispatch(fetchPlayers());
-        }
-    }, [])
+    }, [currentTable, entity, dispatch]);
 
     return (
         <>
@@ -72,7 +42,7 @@ function LeaderboardPage(props: LeaderboardPageProps) {
                         Leaderboard
                     </div>
                 </Block>
-                { data.length > 0 && isSuccess ? <Table columns={columns} data={data} /> : 'Fetching...'}
+                { isFetching ? 'Fetching...' : <Table columns={columns} data={data} /> }
                 </Box>
             </Container>
         </>

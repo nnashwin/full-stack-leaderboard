@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { Column, useTable, useSortBy } from 'react-table';
+import React from 'react';
+import { useTable, useSortBy } from 'react-table';
 import '../../css/Table.css';
 
 interface TableColumn {
@@ -25,7 +25,7 @@ function Table({ columns, data }: TableProps) {
    } = useTable<any>({ columns, data }, useSortBy)
  
    return (
-     <table {...getTableProps()} role="leaderboard-table" style={{ border: 'solid 1px blue' }} data-testid="leaderboard">
+     <table {...getTableProps()} role="table" style={{ border: 'solid 1px blue' }} data-testid="leaderboard">
        <thead>
          {headerGroups.map(headerGroup => (
            <tr {...headerGroup.getHeaderGroupProps()} data-testid='header-row'>
