@@ -1,0 +1,7 @@
+@media screen and (min-width: 788px) {
+    .leaderboard-box {
+        display: flex;
+        flex-direction: column;
+        min-width: 780.888px;
+    }   
+}

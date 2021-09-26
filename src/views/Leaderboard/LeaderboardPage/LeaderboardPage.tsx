@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector  } from '../../../app/hooks';
 import Constants from '../../../common/constants';
 import { clearState, fetchMatches, fetchPlayers, tableSelector } from '../../../features/table/tableSlice';
 import '../../../css/bulma.min.css';
+import '../../../css/leaderboard.css';
 
 import {LeaderboardPageProps} from '../../../common/types';
 import Table from '../../../features/table/Table';
@@ -36,13 +37,13 @@ function LeaderboardPage(props: LeaderboardPageProps) {
     return (
         <>
             <Container breakpoint="widescreen" className="app-container">
-                <Box>
-                <Block>
-                    <div className="leaderboard-title">
-                        Leaderboard
-                    </div>
-                </Block>
-                { isFetching ? 'Fetching...' : <Table columns={columns} data={data} /> }
+                <Box className='leaderboard-box'>
+                    <Block>
+                        <div className="leaderboard-title">
+                            Leaderboard
+                        </div>
+                    </Block>
+                    { isFetching ? 'Fetching...' : <Table columns={columns} data={data} /> }
                 </Box>
             </Container>
         </>
