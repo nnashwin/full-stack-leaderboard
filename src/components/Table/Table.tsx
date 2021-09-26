@@ -1,85 +1,28 @@
 import React, { useMemo } from 'react';
 import { Column, useTable, useSortBy } from 'react-table';
-import '../css/Table.css';
-
-interface ExampleObject {
-    name: string
-    wins: number
-    losses: number
-    rating: number
-    gamesPlayed: number
-}
-
-const columns: Column<ExampleObject>[] = [
-        {
-            Header: 'Player Name',
-            accessor: 'name', 
-            sortType: 'basic'
-        },
-        {
-            Header: 'Wins',
-            accessor: 'wins',
-            sortType: 'basic'
-        },
-
-        {
-            Header: 'Losses',
-            accessor: 'losses',
-            sortType: 'basic'
-        },
-        {
-            Header: 'Total Matches Played',
-            accessor: 'gamesPlayed',
-            sortType: 'basic'
-        },
-        {
-            Header: 'Rating',
-            accessor: 'rating',
-            sortType: 'basic'
-        },
-    ]
-
-const data = [
-       {
-         name: 'Liu Guoliang',
-         wins: 100,
-         losses: 5,
-         rating: 2300,
-         gamesPlayed: 105
-       },
-       {
-         name: 'Chen Meng',
-         wins: 110,
-         losses: 0,
-         rating: 3900,
-         gamesPlayed: 110
-       },
-       {
-         name: 'Mima Ito',
-         wins: 55,
-         losses: 80,
-         rating: 1600,
-         gamesPlayed: 135
-       },
-     ];
+import '../../css/Table.css';
 
 interface TableColumn {
-    header: string;
+    Header: string;
     accessor: string;
+    sortType: string;
 }
 
 interface TableProps {
     columns: TableColumn[];
+    data: any;
 }
 
-function Table() {
+function Table({ columns, data }: TableProps) {
    const {
      getTableProps,
      getTableBodyProps,
      headerGroups,
      rows,
      prepareRow
-   } = useTable<ExampleObject>({ columns, data }, useSortBy)
+     // TODO: Fix typescript error that occurs due to type mismatch by extending the Column type.
+     // Use the following for reference https://github.com/tannerlinsley/react-table/issues/3064
+   } = useTable<any>({ columns, data }, useSortBy)
  
    return (
      <table {...getTableProps()} role="leaderboard-table" style={{ border: 'solid 1px blue' }} data-testid="leaderboard">
