@@ -24,7 +24,7 @@ const MatchType = new graphql.GraphQLObjectType({
         finalPlayerScore: { type: graphql.GraphQLInt },
         finalOpponentScore: { type: graphql.GraphQLInt },
         winner_id: { type: graphql.GraphQLID },
-        matchTime: { type: graphql.GraphQLFloat },
+        matchTime: { type: graphql.GraphQLString },
         location: { type: graphql.GraphQLString },
     }
 });
