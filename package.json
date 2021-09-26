@@ -24,6 +24,7 @@
     "bfj": "^7.0.2",
     "camelcase": "^6.1.0",
     "case-sensitive-paths-webpack-plugin": "2.3.0",
+    "concurrently": "^6.2.1",
     "css-loader": "4.3.0",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
@@ -44,11 +45,15 @@
     "graphql": "^15.6.0",
     "html-webpack-plugin": "4.5.0",
     "identity-obj-proxy": "3.0.0",
+    "install": "^0.13.0",
     "jest": "26.6.0",
     "jest-circus": "26.6.0",
     "jest-resolve": "26.6.0",
     "jest-watch-typeahead": "0.6.1",
     "mini-css-extract-plugin": "0.11.3",
+    "newman": "^5.3.0",
+    "nodemon": "^2.0.13",
+    "npm": "^7.24.1",
     "optimize-css-assets-webpack-plugin": "5.0.4",
     "pnp-webpack-plugin": "1.6.4",
     "postcss-flexbugs-fixes": "4.2.1",
@@ -81,10 +86,11 @@
     "workbox-webpack-plugin": "5.1.4"
   },
   "scripts": {
-    "start": "node scripts/start.js",
-    "server": "node server/index.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "dev": "concurrently \"npm run server\" \"npm start \"",
+    "server": "nodemon server/index.js",
+    "start": "node scripts/start.js",
+    "test": "CI=true node scripts/test.js && newman run automation/leaderboard.postman_collection.json"
   },
   "eslintConfig": {
     "extends": [
