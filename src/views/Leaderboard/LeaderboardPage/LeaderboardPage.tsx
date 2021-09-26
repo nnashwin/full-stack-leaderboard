@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Block, Container, Notification } from 'react-bulma-components';
+import { useAppDispatch, useAppSelector  } from '../../../app/hooks';
+import { clearState, fetchPlayers, tableSelector } from '../../../features/table/tableSlice';
 import '../../../css/bulma.min.css';
 
 import {LeaderboardPageProps} from '../../../common/types';
-import Table from '../../../components/Table/Table';
+import Table from '../../../features/table/Table';
 
 interface PlayerData {
     name: string;
@@ -42,31 +44,25 @@ const columns = [
     },
 ];
 
-const data = [
-       {
-         name: 'Liu Guoliang',
-         wins: 100,
-         losses: 5,
-         rating: 2300,
-         gamesPlayed: 105
-       },
-       {
-         name: 'Chen Meng',
-         wins: 110,
-         losses: 0,
-         rating: 3900,
-         gamesPlayed: 110
-       },
-       {
-         name: 'Mima Ito',
-         wins: 55,
-         losses: 80,
-         rating: 1600,
-         gamesPlayed: 135
-       },
-     ];
-
 function LeaderboardPage(props: LeaderboardPageProps) {
+    const dispatch = useAppDispatch();
+
+    // @ts-ignore
+    // TODO: update the redux typescript related code to make the types match.
+    const { data, isFetching, isSuccess, isError, errorMessage } = useAppSelector(tableSelector);
+
+    useEffect(() => {
+        return () => {
+            dispatch(clearState());
+        }
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            dispatch(fetchPlayers());
+        }
+    }, [])
+
     return (
         <>
             <Container breakpoint="widescreen" className="app-container">
@@ -76,7 +72,7 @@ function LeaderboardPage(props: LeaderboardPageProps) {
                         Leaderboard
                     </div>
                 </Block>
-                <Table columns={columns} data={data} />
+                { data.length > 0 && isSuccess ? <Table columns={columns} data={data} /> : 'Fetching...'}
                 </Box>
             </Container>
         </>

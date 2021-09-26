@@ -5,11 +5,10 @@ import {
   Route,
   Link
 } from 'react-router-dom';
-import '../../css/App.css';
-import Constants from '../../common/constants';
-import HomePage from '../../views/Home/Homepage/Homepage';
-import AddPlayerForm from '../forms/AddPlayerForm/AddPlayerForm';
-import LeaderboardPage from '../../views/Leaderboard/LeaderboardPage/LeaderboardPage';
+import './css/App.css';
+import Constants from './common/constants';
+import HomePage from './views/Home/Homepage/Homepage';
+import LeaderboardPage from './views/Leaderboard/LeaderboardPage/LeaderboardPage';
 
 
 function App() {
