@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { Column, useTable, useSortBy } from 'react-table';
+import '../css/Table.css';
 
 interface ExampleObject {
     name: string
@@ -7,10 +8,6 @@ interface ExampleObject {
     losses: number
     rating: number
     gamesPlayed: number
-}
-
-interface SortType {
-    sortType: string
 }
 
 const columns: Column<ExampleObject>[] = [
@@ -66,6 +63,15 @@ const data = [
        },
      ];
 
+interface TableColumn {
+    header: string;
+    accessor: string;
+}
+
+interface TableProps {
+    columns: TableColumn[];
+}
+
 function Table() {
    const {
      getTableProps,
@@ -91,9 +97,11 @@ function Table() {
                  }}
                >
                  {column.render('Header')}
-                 <span>
-                     {column.isSorted ? (column.isSortedDesc ? '↑' : '↓') : ''}
-                 </span>
+                 <div className="pointer-block">
+                    <span>
+                        {column.isSorted ? (column.isSortedDesc ? '↑' : '↓') : ''}
+                    </span>
+                 </div>
                </th>
              ))}
            </tr>
