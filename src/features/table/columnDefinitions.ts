@@ -14,7 +14,6 @@ export const matchColumns = [
         accessor: 'player_id',
         sortType: 'basic'
     },
-
     {
         Header: 'Player Score',
         accessor: 'finalPlayerScore',
@@ -33,6 +32,11 @@ export const matchColumns = [
 ];
 
 export const playerColumns = [
+    {
+        Header: 'Player Id',
+        accessor: 'id',
+        sortType: 'basic'
+    },
     {
         Header: 'Player Name',
         accessor: 'name', 

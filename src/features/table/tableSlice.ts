@@ -1,6 +1,6 @@
 // @ts-nocheck
+// TODO: Work out types to redux-specific code
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { useAppSelector } from '../../app/hooks';
 import Constants from '../../common/constants';
 import { playerColumns, matchColumns } from './columnDefinitions';
 
@@ -25,6 +25,7 @@ export const fetchPlayers = createAsyncThunk(
             losses
             gamesPlayed
             rating
+            id
         }
 }`}),
                 }
@@ -39,7 +40,9 @@ export const fetchPlayers = createAsyncThunk(
             }
         } catch (e: any) {
             console.error('Error: ', e);
-            return thunkAPI.rejectWithValue(e.response.data);
+            if (e && e.response) {
+                return thunkAPI.rejectWithValue(e.response.data);
+            }
         }
     });
 
@@ -79,7 +82,9 @@ export const fetchMatches = createAsyncThunk(
             }
         } catch (e: any) {
             console.error('Error: ', e);
-            return thunkAPI.rejectWithValue(e.response.data);
+            if (e && e.response) {
+                return thunkAPI.rejectWithValue(e.response.data);
+            }
         }
     });
 
@@ -135,5 +140,3 @@ export const tableSlice = createSlice({
 });
 
 export const { clearState } = tableSlice.actions;
-
-export const tableSelector: typeof useAppSelector = state => state.table;

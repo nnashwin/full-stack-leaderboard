@@ -5,13 +5,16 @@ import {
   Route,
   Link
 } from 'react-router-dom';
-import './css/App.css';
+import { Container } from 'react-bulma-components';
 import Constants from './common/constants';
+import AddFormPage from './views/AddForm/AddFormPage/AddFormPage';
 import HomePage from './views/Home/Homepage/Homepage';
 import LeaderboardPage from './views/Leaderboard/LeaderboardPage/LeaderboardPage';
+import './css/App.css';
+import './css/bulma.min.css';
 
 
-function App() {
+function App(): React.ReactElement | null {
   return (
     <>
       <Router>
@@ -27,19 +30,29 @@ function App() {
               <li>
                 <Link to='/matches'>Matches</Link>
               </li>
+              <li>
+                <Link to='/add-form'>Add Form</Link>
+              </li>
             </ul>
           </nav>
-          <Switch>
-            <Route exact path="/">
-              <HomePage />
-            </Route>
-            <Route path="/players">
-              <LeaderboardPage entity={Constants.PLAYER_ENTITY} />
-            </Route>
-            <Route path="/matches">
-              <LeaderboardPage entity={Constants.MATCHES_ENTITY}/>
-            </Route>
-          </Switch>
+
+          <Container breakpoint="widescreen" className="app-container">
+            <Switch>
+              <Route exact path="/">
+                <HomePage />
+              </Route>
+              <Route path="/add-form">
+                <AddFormPage />
+              </Route>
+              <Route path="/matches">
+                <LeaderboardPage entity={Constants.MATCHES_ENTITY}/>
+              </Route>
+              <Route path="/players">
+                <LeaderboardPage entity={Constants.PLAYER_ENTITY} />
+              </Route>
+            </Switch>
+          </Container>
+          
         </div>
       </Router>
     </>

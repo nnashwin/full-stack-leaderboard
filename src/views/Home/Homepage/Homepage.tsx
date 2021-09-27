@@ -3,7 +3,7 @@ import React from 'react';
 function HomePage() {
   return (
     <>
-      <div data-testid="HomePage">Home page me!</div>
+      <div data-testid="HomePage">Home page placeholder.  Click on a nav link and navigate around!</div>
     </>
   );
 }

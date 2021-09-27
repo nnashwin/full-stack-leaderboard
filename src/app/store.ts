@@ -1,10 +1,11 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import { combineReducers, configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { tableSlice } from '../features/table/tableSlice';
+import { formSlice } from '../features/form/formSlice';
 
+const reducer = combineReducers({form: formSlice.reducer, table: tableSlice.reducer});
+    
 export const store = configureStore({
-    reducer: {
-        table: tableSlice.reducer,
-    },
+    reducer: reducer,
 });
 
 export type AppDispatch = typeof store.dispatch;

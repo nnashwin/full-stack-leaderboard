@@ -13,7 +13,7 @@ interface TableProps {
     data: any;
 }
 
-function Table({ columns, data }: TableProps) {
+function Table({ columns, data }: TableProps): React.ReactElement | null {
    const {
      getTableProps,
      getTableBodyProps,
