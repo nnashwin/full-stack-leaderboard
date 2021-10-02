@@ -3,7 +3,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Constants from '../../common/constants';
 import { playerColumns, matchColumns } from './columnDefinitions';
-const {SERVER_HOST_URL: host} = Constants;
+const host = process.env.REACT_APP_SERVER_URL;
 
 export const fetchPlayers = createAsyncThunk(
     'table/fetchPlayers',

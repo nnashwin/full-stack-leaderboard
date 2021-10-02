@@ -5,6 +5,7 @@
   "main": "server/index.js",
   "scripts": {
     "build": "cd react-ui/ && yarn && yarn run build",
+    "dev": "cd react-ui/ && yarn && yarn run build:dev && cd ../ && yarn start",
     "start": "nodemon server/index.js",
     "test": "cd react-ui && yarn test && cd ../ && newman run automation/leaderboard.postman_collection.json"
   },

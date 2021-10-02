@@ -2,7 +2,7 @@
 // TODO: Work out types to redux-specific code
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Constants from '../../common/constants';
-const {SERVER_HOST_URL: host} = Constants;
+const host = process.env.REACT_APP_SERVER_URL;
 
 export const addPlayer = createAsyncThunk(
     'form/addPlayer',
