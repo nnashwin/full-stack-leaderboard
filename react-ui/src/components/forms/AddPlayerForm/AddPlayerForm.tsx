@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { RootState } from '../../../app/store';
 import { addPlayer, clearState } from '../../../features/form/formSlice';
 
 import { Button, Form } from 'react-bulma-components';
@@ -13,7 +14,7 @@ function AddPlayerForm(): React.ReactElement | null {
 
     const [playerName, setPlayerName]: [string, (result: string) => void] = useState('');
 
-    const { errorMessage, isError, isFetching  } = useAppSelector((state) => state.form);
+    const { errorMessage, isError, isFetching, submitSuccess } = useAppSelector((state: RootState) => state.form);
 
     const submitForm = () => {
         if (playerName !== '') {
@@ -47,7 +48,11 @@ function AddPlayerForm(): React.ReactElement | null {
                 </Form.Control>)}
 
                 {isError && (<Form.Control>
-                    {errorMessage}
+                    <span className="error-message">Error: {errorMessage}</span>
+                </Form.Control>)}
+
+                {submitSuccess && (<Form.Control>
+                    <span className="success-message">Your data has been posted successfully!</span>
                 </Form.Control>)}
             </Form.Field>
         </>

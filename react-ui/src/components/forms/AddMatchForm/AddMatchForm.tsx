@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form } from 'react-bulma-components';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { RootState } from '../../../app/store';
 import { MatchParams } from '../../../common/types';
 import { addMatch, clearState, fetchPlayerIds } from '../../../features/form/formSlice';
 
@@ -21,7 +22,7 @@ function AddMatchForm(): React.ReactElement | null {
     const [finalPlayerScore, setFinalPlayerScore]: [number, (result: number) => void] = useState(0);
     const [finalOpponentScore, setFinalOpponentScore]: [number, (result: number) => void] = useState(0);
 
-    const { errorMessage, isError, isFetching, playerIds } = useAppSelector((state) => state.form);
+    const { errorMessage, isError, isFetching, playerIds, submitSuccess } = useAppSelector((state: RootState) => state.form);
 
     const submitForm = (e: React.MouseEvent<HTMLElement>): void => {
         e.preventDefault();
@@ -36,6 +37,14 @@ function AddMatchForm(): React.ReactElement | null {
         };
 
         dispatch(addMatch(matchParams));
+        // TODO: simplify the state into a single object that can be set back to default
+        // Consider storing it in the redux state (although it might be easier to store it in the component itself)
+        setLocation('');
+        setPlayerId(1);
+        setOpponentId(2);
+        setMatchTime('');
+        setFinalPlayerScore(0);
+        setFinalOpponentScore(0);
     }
 
     return (
@@ -77,7 +86,7 @@ function AddMatchForm(): React.ReactElement | null {
                     >
                         { playerIds.length === 0 && isFetching ? 'searching' : playerIds.map((playerObj) => {
                             const {name, id} = playerObj;
-                            if (id === playerId) {
+                            if (Number(id) === playerId) {
                                 return <option key={`${name}-${id}`} value={id} selected>{name}</option>
                             }
 
@@ -99,7 +108,7 @@ function AddMatchForm(): React.ReactElement | null {
 
                         { playerIds.length === 0 && isFetching ? 'searching' : playerIds.map((playerObj) => {
                             const {name, id} = playerObj;
-                            if (id === opponentId) {
+                            if (Number(id) === opponentId) {
                                 return <option key={`${name}-${id}`} value={id} selected>{name}</option>
                             }
 
@@ -147,6 +156,10 @@ function AddMatchForm(): React.ReactElement | null {
 
                 {isError && (<Form.Control>
                     <span className="error-message">Error: {errorMessage}</span>
+                </Form.Control>)}
+
+                {submitSuccess && (<Form.Control>
+                    <span className="success-message">Your data has been posted successfully!</span>
                 </Form.Control>)}
             </Form.Field>
         </>

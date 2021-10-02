@@ -1,25 +1,19 @@
 const express = require('express');
-const cors = require('cors');
 const { graphqlHTTP } = require('express-graphql');
+const path = require('path');
 const db = require('./db');
 const schema = require('./schema');
-const utils = require('./utils');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-const corsOptions = {
-    origin: "http://localhost:3000",
-    optionsSuccessStatus: 200
-};
+app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
 
-app.use(cors(corsOptions));
+app.get('*', (req, res) => {
+            res.sendFile(path.resolve(__dirname, '../react-ui/build', 'index.html'));
+        });
 
-app.use((req, res, next) => {
-    res.setHeader("Content-Type", "application/json");
-    next();
-});
-
+// ensure that the db is connected 
 db
     .connect()
     .then(db => { 

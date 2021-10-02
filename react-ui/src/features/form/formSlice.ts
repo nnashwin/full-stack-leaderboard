@@ -1,13 +1,15 @@
 // @ts-nocheck
 // TODO: Work out types to redux-specific code
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import Constants from '../../common/constants';
+const {SERVER_HOST_URL: host} = Constants;
 
 export const addPlayer = createAsyncThunk(
     'form/addPlayer',
     async (name: string, thunkAPI) => {
         try {
             const response = await fetch(
-                'http://localhost:3001/graphql',
+                `${host}/graphql`,
                 {
                     method: 'POST',
                     headers: {
@@ -52,7 +54,7 @@ export const addMatch = createAsyncThunk(
         }
         try {
             const response = await fetch(
-                'http://localhost:3001/graphql',
+                `${host}/graphql`,
                 {
                     method: 'POST',
                     headers: {
@@ -90,7 +92,7 @@ export const fetchPlayerIds = createAsyncThunk(
     async (_params, thunkAPI) => {
         try {
             const response = await fetch(
-                'http://localhost:3001/graphql',
+                `${host}/graphql`,
                 {
                     method: 'POST',
                     headers: {
@@ -123,20 +125,38 @@ export const fetchPlayerIds = createAsyncThunk(
         }
     });
 
+interface PlayerId {
+    id: string;
+    name: string;
+}
+
+export interface FormState {
+    errorMessage: string; 
+    isFetching: boolean;
+    isSuccess: boolean;
+    isError: boolean;
+    submitSuccess: boolean;
+    playerIds: PlayerId[];
+}
+
+const initialState: FormState = {
+    errorMessage: "",
+    isFetching: false,
+    isSuccess: false,
+    submitSuccess: false,
+    isError: false,
+    playerIds: []
+};
+
 export const formSlice = createSlice({
     name: "form",
-    initialState: {
-        errorMessage: "",
-        isFetching: false,
-        isSuccess: false,
-        isError: false,
-        playerIds: [],
-    },
+    initialState: initialState,
     reducers: {
         clearState: (state) => {
             state.isFetching = false;
             state.isSuccess = false;
             state.isError  = false;
+            state.submitSuccess = false;
 
             return state;
         },
@@ -146,7 +166,7 @@ export const formSlice = createSlice({
             .addCase(addPlayer.fulfilled, (state, {payload}) => {
                 state.isFetching = false;
                 state.isSuccess = true;
-                dispatch(clearState())
+                state.submitSuccess = true;
             })
             .addCase(addPlayer.pending, (state, {payload}) => {
                 state.isFetching = true;
@@ -159,6 +179,7 @@ export const formSlice = createSlice({
             .addCase(addMatch.fulfilled, (state, {payload}) => {
                 state.isFetching = false;
                 state.isSuccess = true;
+                state.submitSuccess = true;
             })
             .addCase(addMatch.pending, (state, {payload}) => {
                 state.isFetching = true;
@@ -180,3 +201,5 @@ export const formSlice = createSlice({
 });
 
 export const { clearState } = formSlice.actions;
+
+export default formSlice.reducer;

@@ -3,13 +3,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import Constants from '../../common/constants';
 import { playerColumns, matchColumns } from './columnDefinitions';
+const {SERVER_HOST_URL: host} = Constants;
 
 export const fetchPlayers = createAsyncThunk(
     'table/fetchPlayers',
     async (_params, thunkAPI) => {
         try {
             const response = await fetch(
-                'http://localhost:3001/graphql',
+                `${host}/graphql`,
                 {
                     method: 'POST',
                     headers: {
@@ -51,7 +52,7 @@ export const fetchMatches = createAsyncThunk(
     async (_params, thunkAPI) => {
         try {
             const response = await fetch(
-                'http://localhost:3001/graphql',
+                `${host}/graphql`,
                 {
                     method: 'POST',
                     headers: {
