@@ -26,6 +26,10 @@ function LeaderboardPage(props: LeaderboardPageProps): React.ReactElement | null
                 dispatch(fetchMatches());
                 break;
         }
+
+        return (() => {
+            dispatch(clearState());
+        })
     }, [entity]);
 
     return (

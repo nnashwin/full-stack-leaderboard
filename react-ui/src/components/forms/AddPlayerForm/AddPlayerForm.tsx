@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { RootState } from '../../../app/store';
 import { addPlayer, clearState } from '../../../features/form/formSlice';
-import { clearState as clearLeaderboardState } from '../../../features/table/tableSlice';
 
 import { Button, Form } from 'react-bulma-components';
 
