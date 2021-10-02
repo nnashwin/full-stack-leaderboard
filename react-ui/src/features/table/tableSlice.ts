@@ -98,8 +98,7 @@ export const tableSlice = createSlice({
         errorMessage: "",
         isFetching: false,
         isSuccess: false,
-        isError: false,
-        previousTable: ''
+        isError: false
     },
     reducers: {
         clearState: (state) => {
@@ -120,7 +119,6 @@ export const tableSlice = createSlice({
                 state.data = payload.data.players;
                 state.isFetching = false;
                 state.isSuccess = true;
-                state.previousTable = state.currentTable;
                 state.currentTable = Constants.PLAYER_ENTITY;
             })
             .addCase(fetchPlayers.pending, (state, {payload}) => {
@@ -131,7 +129,6 @@ export const tableSlice = createSlice({
                 state.data = payload.data.matches;
                 state.isFetching = false;
                 state.isSuccess = true;
-                state.previousTable = state.currentTable;
                 state.currentTable = Constants.MATCHES_ENTITY;
             })
             .addCase(fetchMatches.pending, (state, {payload}) => {

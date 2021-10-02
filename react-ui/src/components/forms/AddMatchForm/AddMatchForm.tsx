@@ -37,15 +37,19 @@ function AddMatchForm(): React.ReactElement | null {
         };
 
         dispatch(addMatch(matchParams));
-        // TODO: simplify the state into a single object that can be set back to default
-        // Consider storing it in the redux state (although it might be easier to store it in the component itself)
-        setLocation('');
-        setPlayerId(1);
-        setOpponentId(2);
-        setMatchTime('');
-        setFinalPlayerScore(0);
-        setFinalOpponentScore(0);
     }
+
+    useEffect(() => {
+        if (submitSuccess) {
+            setLocation('');
+            setPlayerId(1);
+            setOpponentId(2);
+            setMatchTime('');
+            setFinalPlayerScore(0);
+            setFinalOpponentScore(0);
+            dispatch(clearState());
+        }
+    }, [submitSuccess])
 
     return (
         <>

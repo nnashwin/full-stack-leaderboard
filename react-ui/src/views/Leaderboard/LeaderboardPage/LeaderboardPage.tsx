@@ -26,7 +26,7 @@ function LeaderboardPage(props: LeaderboardPageProps): React.ReactElement | null
                 dispatch(fetchMatches());
                 break;
         }
-    }, [currentTable, entity, dispatch]);
+    }, [entity]);
 
     return (
         <>
