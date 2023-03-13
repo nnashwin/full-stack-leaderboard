@@ -12,6 +12,9 @@ react-ui/node_modules
 # production
 /build
 
+**/build
+**.db3
+
 # misc
 .DS_Store
 .env.local
